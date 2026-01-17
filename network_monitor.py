@@ -11,7 +11,7 @@ def get_getway():
             parts = line.split(':')
             if len(parts) > 1 :
                 gateway = parts[1].strip().split()[0]
-                if gateway.startswith('192.') or gateway.startswith('10.') or gateway.startstwith('172.') : return gateway
+                if gateway.startswith('192.') or gateway.startswith('10.') or gateway.startswith('172.') : return gateway
     return None 
 
 
@@ -37,5 +37,6 @@ while True:
             f.write(log_entry)
     print("=====")
     time.sleep(30)
+    with open('monitor.log','a') as f:
+            f.write("=====updated after 30 seconds=====\n")
 
-print (ping_host("google.com"))
