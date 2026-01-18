@@ -2,18 +2,14 @@ import subprocess
 import platform
 import time
 import datetime
-
+from port__scanner import port_scanner
+scan_host = port_scanner.scan_host
 def send_alert(host , status ) :
     alert_file = "alert_file.txt"
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     alert = f"[{timestamp}] {host} is {status}\n"
     with open(alert_file, 'a') as f:
         f.write(alert + "\n")
-
-
-
-
-
 def get_gatway():
     result= subprocess.run(['ipconfig'], stdout=subprocess.PIPE, stderr=subprocess.PIPE,text=True)
     output= result.stdout.lower()
@@ -39,6 +35,7 @@ if user_input.strip().lower() == "y":
         hosts.append(new_host)
         print(f"{new_host} Added")
 
+
         
 def ping_host(host):
     parm= '-n' if platform.system().lower() == 'windows' else '-c'
@@ -47,10 +44,13 @@ def ping_host(host):
     return result.returncode == 0
 try:
     while True:
+        scan_choice = input("do you want to scan ports for each host? (y/n) ").strip().lower()
+        print()
         now = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
         last_status = {host: None for host in hosts}
         for host in hosts:
             status = "UP" if ping_host(host) else "DOWN"
+           
             if host not in last_status or last_status[host] is None:
                 last_status[host] = "UP"
             if status != last_status[host] :
@@ -58,6 +58,10 @@ try:
                 send_alert(host, last_status[host]) 
             log_entry= f"[{now}],{host}, {status}\n"
             print(log_entry.strip())
+            if scan_choice == "y" and status == 'UP':
+                scan_host(host)
+            else:
+                print("port scanning skipped")
             with open('monitor.log','a') as f:
                 f.write(log_entry)
         print("=====")
