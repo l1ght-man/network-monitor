@@ -1,13 +1,13 @@
-# Network Monitor
+# Network Monitor 🚀
 
 A lightweight tool for monitoring network activity and connection health.
 
 ## Features
 
-- Real-time traffic monitoring
-- Connection diagnostics
-- Performance metrics
-- Alert notifications
+- 🔴 **Live ping monitoring** (8.8.8.8 → status)
+- 🛡️ **Port scanner** (`scan_host("target")`)
+- 📊 **Real-time console** updates
+- 💾 **Auto-logging** (`monitor.log`)
 
 ## Installation
 
