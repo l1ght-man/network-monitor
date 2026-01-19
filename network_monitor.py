@@ -24,9 +24,9 @@ def get_gatway():
 
 
 hosts= ['8.8.8.8','google.com','1.1.1.1','127.0.0.1']
-gateway= get_gatway()
-if gateway :
-    hosts.insert(0,gateway)
+#gateway= get_gatway()
+#if gateway :
+ #s    hosts.insert(0,gateway)
  
 user_input = input("add a host? (y/n) ")
 if user_input.strip().lower() == "y":
@@ -43,8 +43,8 @@ def ping_host(host):
     result= subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     return result.returncode == 0
 try:
+    scan_choice = input("do you want to scan ports for each host? (y/n) ").strip().lower()   
     while True:
-        scan_choice = input("do you want to scan ports for each host? (y/n) ").strip().lower()
         print()
         now = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
         last_status = {host: None for host in hosts}
@@ -59,13 +59,15 @@ try:
             log_entry= f"[{now}],{host}, {status}\n"
             print(log_entry.strip())
             if scan_choice == "y" and status == 'UP':
+                with open('open_port.log','a') as f:
+                    f.write(f"==== OPEN PORTS [{now}],{host}, {status} ====\n") 
                 scan_host(host)
             else:
                 print("port scanning skipped")
             with open('monitor.log','a') as f:
                 f.write(log_entry)
         print("=====")
-        time.sleep(30)
+        time.sleep(1)
         with open('monitor.log','a') as f:
                 f.write("******updated after 30 seconds******\n")
 except KeyboardInterrupt:
